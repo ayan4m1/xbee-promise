@@ -32,7 +32,7 @@ describe('xbee-promise', function () {
 
         beforeEach(function () {
             xbee = xbeePromise({
-                serialport: "serialport path",
+                portName: "device name or path",
                 module: "ZigBee"
             });
         });

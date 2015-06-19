@@ -72,12 +72,12 @@ describe('xbee-promise', function () {
 
         });
 
-        it("fails with incorrect 'api_mode' options parameter", function () {
+        it("fails with incorrect 'apiMode' options parameter", function () {
 
             callConstructor({
                 serialport: "serialport path",
                 module: "ZigBee",
-                api_mode: 3
+                apiMode: 3
             }).should.throw(/must be one of '1,2'/);
 
         });
@@ -124,9 +124,9 @@ describe('xbee-promise', function () {
 
         });
 
-        it("passes 'serialport' path to serialport", function () {
+        it("passes port name to serialport", function () {
 
-            var serialport = "fake serialport path",
+            var serialport = "fake port name",
                 xbee;
 
             xbee = xbeePromise({ serialport: serialport, module: "ZigBee" });
@@ -138,7 +138,7 @@ describe('xbee-promise', function () {
 
         it("passes parser to serialport", function () {
 
-            var serialport = "fake serialport path",
+            var serialport = "fake port name",
                 xbee;
 
             xbee = xbeePromise({ serialport: serialport, module: "ZigBee" });
@@ -151,7 +151,7 @@ describe('xbee-promise', function () {
 
         it("passes 'serialportOptions' + parser to serialport", function () {
 
-            var serialport = "fake serialport path",
+            var serialport = "fake port name",
                 serialportOptions = {
                     string: "never",
                     numeric: 42,
