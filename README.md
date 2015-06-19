@@ -34,18 +34,18 @@ mode is used.  In addition, you will need to know if you are using a ZigBee modu
 var xbeePromise = require('xbee-promise');
 
 var xbee = xbeePromise({
-    serialport: '/dev/ttyUSB0',
-    serialPortOptions: {
+    portName: '/dev/ttyUSB0',
+    portOptions: {
         baudrate: 57600
     },
     module: "ZigBee"
 });
 ```
 
-Note: if you are using API mode 2, you must specify that with the `api_mode` parameter
-(`api_mode: 2`).  You can give any options
+Note: if you are using API mode 2, you must specify that with the `apiMode` parameter
+(`apiMode: 2`).  You can give any options
 [known by serialport](https://github.com/voodootikigod/node-serialport#to-use) inside
-`serialportOptions` (other than `parser` as it is used and set by xbee-promise).  To see
+`portOptions` (other than `parser` as it is used and set by xbee-promise).  To see
 what the library is doing (during lookups, etc), you can add the debug flag
 (`debug: true`).  Finally, you can set the default timeout for all commands with
 `defaultTimeout`.  The default is 5000 milliseconds.

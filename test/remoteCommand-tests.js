@@ -15,7 +15,7 @@
 
 var assert = require("assert");
 var should = require("should");
-var Q = require("q");
+var Q = require('q');
 
 var proxyquire = require("proxyquire");
 var mockserialport = require("./mock-serialport.js");
@@ -38,7 +38,7 @@ describe('xbee-promise', function () {
 
                 beforeEach(function () {
                     xbee = xbeePromise({
-                        serialport: "serialport path",
+                        portName: "portName path",
                         module: module,
                         defaultTimeoutMs: 100
                     });
@@ -302,7 +302,7 @@ describe('xbee-promise', function () {
 
                     it("returns a promise", function () {
 
-                        Q.isPromise(commandPromise).should.equal(true);
+                        commandPromise.should.equal(Q(commandPromise));
 
                     });
 
@@ -473,7 +473,7 @@ describe('xbee-promise', function () {
 
                     it("returns a promise", function () {
 
-                        Q.isPromise(commandPromise).should.equal(true);
+                        commandPromise.should.equal(Q(commandPromise));
 
                     });
 
@@ -644,7 +644,7 @@ describe('xbee-promise', function () {
 
                         it("returns a promise", function () {
 
-                            Q.isPromise(commandPromise).should.equal(true);
+                            commandPromise.should.equal(Q(commandPromise));
 
                         });
 

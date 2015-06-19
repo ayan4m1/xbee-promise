@@ -15,8 +15,8 @@
 var xbeePromise = require('../lib/xbee-promise.js');
 
 var xbee = xbeePromise({
-    serialport: '/dev/ttyUSB0',
-    serialportOptions: {
+    portName: '/dev/ttyUSB0',
+    portOptions: {
         baudrate: 57600
     },
     module: "ZigBee",

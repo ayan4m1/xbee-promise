@@ -16,12 +16,12 @@
 var should = require("should");
 
 var proxyquire = require("proxyquire");
-var mockserialport = require("./mock-serialport.js");
-var mockXbeeApi = require("./mock-xbee-api.js");
+var mockSerial = require("./mock-serialport.js");
+var mockApi = require("./mock-xbee-api.js");
 
 var xbeePromise = proxyquire("../lib/xbee-promise.js", {
-    'serialport': mockserialport,
-    'xbee-api': mockXbeeApi
+    'serialport': mockSerial,
+    'xbee-api': mockApi
 });
 
 describe('xbee-promise', function () {
@@ -39,17 +39,17 @@ describe('xbee-promise', function () {
             var badOptions = [ undefined, null, "string", true, 42 ];
 
             badOptions.forEach(function (options) {
-                callConstructor(options).should.throw(/property 'serialport' is missing/);
+                callConstructor(options).should.throw(/property 'portName' is missing/);
             });
 
         });
 
-        it("fails with missing 'serialport' options parameter", function () {
+        it("fails with missing 'portName' options parameter", function () {
 
             var badOptions = [ {}, { test: "fail!" } ];
 
             badOptions.forEach(function (options) {
-                callConstructor(options).should.throw(/property 'serialport' is missing/);
+                callConstructor(options).should.throw(/property 'portName' is missing/);
             });
 
         });
@@ -57,7 +57,7 @@ describe('xbee-promise', function () {
         it("fails with missing 'module' options parameter", function () {
 
             callConstructor({
-                serialport: "serialport path",
+                portName: "portName path",
                 a: 'a'
             }).should.throw(/property 'module' is missing/);
 
@@ -66,7 +66,7 @@ describe('xbee-promise', function () {
         it("fails with incorrect 'module' options parameter", function () {
 
             callConstructor({
-                serialport: "serialport path",
+                portName: "portName path",
                 module: "JiffyCorp"
             }).should.throw(/must be one of '802\.15\.4,ZNet,ZigBee'/);
 
@@ -75,7 +75,7 @@ describe('xbee-promise', function () {
         it("fails with incorrect 'apiMode' options parameter", function () {
 
             callConstructor({
-                serialport: "serialport path",
+                portName: "portName path",
                 module: "ZigBee",
                 apiMode: 3
             }).should.throw(/must be one of '1,2'/);
@@ -85,88 +85,88 @@ describe('xbee-promise', function () {
         it("fails with invalid 'defaultTimeoutMs' options parameter", function () {
 
             callConstructor({
-                serialport: "serialport path",
+                portName: "portName path",
                 module: "ZigBee",
                 defaultTimeoutMs: "two minutes"
             }).should.throw(/not of type 'integer'/);
 
             callConstructor({
-                serialport: "serialport path",
+                portName: "portName path",
                 module: "ZigBee",
                 defaultTimeoutMs: -12
             }).should.throw(/not greater than or equal with '10'/);
 
         });
 
-        it("fails with non-object 'serialportOptions' options parameter", function () {
+        it("fails with non-object 'portOptions' options parameter", function () {
 
             var badOptions = [
                     {
-                        serialport: "serialport path",
+                        portName: "portName path",
                         module: "ZigBee",
-                        serialportOptions: "string"
+                        portOptions: "string"
                     },
                     {
-                        serialport: "serialport path",
+                        portName: "portName path",
                         module: "ZigBee",
-                        serialportOptions: true
+                        portOptions: true
                     },
                     {
-                        serialport: "serialport path",
+                        portName: "portName path",
                         module: "ZigBee",
-                        serialportOptions: 81
+                        portOptions: 81
                     }
                 ];
 
             badOptions.forEach(function (options) {
-                callConstructor(options).should.throw(/property 'serialportOptions'.*must be a object/);
+                callConstructor(options).should.throw(/property 'portOptions'.*must be an object/);
             });
 
         });
 
-        it("passes port name to serialport", function () {
+        it("passes port name to portName", function () {
 
-            var serialport = "fake port name",
+            var portName = "fake port name",
                 xbee;
 
-            xbee = xbeePromise({ serialport: serialport, module: "ZigBee" });
+            xbee = xbeePromise({ portName: portName, module: "ZigBee" });
             xbee.should.be.type('object');
-            mockserialport.opened.should.equal(true);
-            mockserialport.path.should.equal(serialport);
+            mockSerial.opened.should.equal(true);
+            mockSerial.path.should.equal(portName);
 
         });
 
-        it("passes parser to serialport", function () {
+        it("passes parser to portName", function () {
 
-            var serialport = "fake port name",
+            var portName = "fake port name",
                 xbee;
 
-            xbee = xbeePromise({ serialport: serialport, module: "ZigBee" });
+            xbee = xbeePromise({ portName: portName, module: "ZigBee" });
             xbee.should.be.type('object');
-            mockserialport.opened.should.equal(true);
-            mockserialport.options.should.be.type('object');
-            mockserialport.options.should.have.property("parser", mockXbeeApi.fauxParser);
+            mockSerial.opened.should.equal(true);
+            mockSerial.options.should.be.type('object');
+            mockSerial.options.should.have.property("parser", mockApi.fauxParser);
 
         });
 
-        it("passes 'serialportOptions' + parser to serialport", function () {
+        it("passes 'portOptions' + parser to portName", function () {
 
-            var serialport = "fake port name",
-                serialportOptions = {
+            var portName = "fake port name",
+                portOptions = {
                     string: "never",
                     numeric: 42,
                     other: function () { return; }
                 },
                 xbee;
 
-            xbee = xbeePromise({ serialport: serialport, module: "ZigBee", serialportOptions: serialportOptions });
+            xbee = xbeePromise({ portName: portName, module: "ZigBee", portOptions: portOptions });
             xbee.should.be.type('object');
-            mockserialport.opened.should.equal(true);
-            mockserialport.options.should.be.type('object');
-            mockserialport.options.should.have.property("parser", mockXbeeApi.fauxParser);
-            mockserialport.options.should.have.property("string", "never");
-            mockserialport.options.should.have.property("numeric", 42);
-            mockserialport.options.should.have.property("other", serialportOptions.other);
+            mockSerial.opened.should.equal(true);
+            mockSerial.options.should.be.type('object');
+            mockSerial.options.should.have.property("parser", mockApi.fauxParser);
+            mockSerial.options.should.have.property("string", "never");
+            mockSerial.options.should.have.property("numeric", 42);
+            mockSerial.options.should.have.property("other", portOptions.other);
 
         });
 
